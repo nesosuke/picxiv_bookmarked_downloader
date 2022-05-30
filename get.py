@@ -11,6 +11,7 @@ with open('config.json', 'r') as f:
     getAll = config['getAll']
     user_id = config['user_id']
     save_to = config['save_to']
+    max_bookmark_id = config['max_bookmark_id']
 
 available_saveto = ['local', 's3']
 
@@ -42,13 +43,17 @@ if getAll is True:
 else:
     count = 20  # 定期取得用
 
-json_result = api.user_bookmarks_illust(user_id, max_bookmark_id=None)
+if max_bookmark_id == '0':
+    max_bookmark_id = None
+json_result = api.user_bookmarks_illust(
+    user_id, max_bookmark_id=max_bookmark_id)
 next_qs = api.parse_qs(json_result.next_url)
 
 
 first_loop = True
 while count > 0:
     print('left_page:', count)
+    print(next_qs['max_bookmark_id'])
     if first_loop is False:
         json_result = api.user_bookmarks_illust(**next_qs)
 
