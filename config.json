@@ -1,0 +1,13 @@
+{
+  "getAll": false,
+  "user_id": "",
+  "save_to": "local",
+  "save_dir": "pixiv_pics",
+  "pagecount": 20,
+  "refresh_token": "",
+  "S3_access_key": "",
+  "S3_secret_key": "",
+  "S3_region": "",
+  "S3_bucket": "",
+  "S3_path": ""
+}
