@@ -1,1 +1,1 @@
-# picxiv_bookmarked_downloader
+# pixiv_bookmarked_downloader
