@@ -1,19 +1,21 @@
+from datetime import datetime
 import json
 import os
 import sys
 import time
 
 import pixivpy3
-
+import metadata
 with open('config.json', 'r') as f:
     config = json.load(f)
     refresh_token = config['refresh_token']
     getAll = config['getAll']
     user_id = config['user_id']
     save_to = config['save_to']
+    pagecount = config['pagecount']
     max_bookmark_id = config['max_bookmark_id']
 
-available_saveto = ['local', 's3']
+available_saveto = ['local']
 
 if save_to not in available_saveto:
     sys.exit('invalid save_to')
@@ -30,6 +32,8 @@ if save_to == 'local':
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
 
+    db_path = save_dir+'/pixiv.sqlite'
+
 elif save_to == 's3':
     pass  # TODO
 
@@ -41,21 +45,24 @@ total_bookmarks = api.user_detail(
 if getAll is True:
     count = total_bookmarks // 30 + 1  # 全取得用
 else:
-    count = 20  # 定期取得用
+    count = pagecount  # 定期取得用
 
 if max_bookmark_id == '0':
     max_bookmark_id = None
 json_result = api.user_bookmarks_illust(
     user_id, max_bookmark_id=max_bookmark_id)
-next_qs = api.parse_qs(json_result.next_url)
 
-
-first_loop = True
+print(db_path)
+next_qs = ""
 while count > 0:
-    print('left_page:', count)
-    print(next_qs['max_bookmark_id'])
-    if first_loop is False:
+    api.auth(refresh_token=refresh_token)
+    if getAll is False:
+        print('left_page:', count)
+    if next_qs != "":
         json_result = api.user_bookmarks_illust(**next_qs)
+        print(next_qs['max_bookmark_id'])
+    else:
+        print(max_bookmark_id)
 
     favoritesillust_ids = []
     for illust in json_result['illusts']:
@@ -67,6 +74,8 @@ while count > 0:
 
         illust = item_data.illust
         if illust is not None:
+            metadata.meta_to_db(metadata=illust, db_path=db_path)
+
             creator_id = str(illust.user.account)+'_'
             if illust.type == 'illust':
 
@@ -86,10 +95,9 @@ while count > 0:
                                      prefix=creator_id)
                         time.sleep(1)
 
-    next_url = api.user_bookmarks_illust(**next_qs).next_url
+    next_url = json_result.next_url
     next_qs = api.parse_qs(next_url)
 
     count -= 1
-    first_loop = False
     time.sleep(5)
 print('finished.')
