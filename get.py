@@ -1,11 +1,13 @@
-from datetime import datetime
 import json
 import os
 import sys
 import time
-import ugoira
+
 import pixivpy3
+
 import metadata
+import ugoira
+
 with open('config.json', 'r') as f:
     config = json.load(f)
     refresh_token = config['refresh_token']
