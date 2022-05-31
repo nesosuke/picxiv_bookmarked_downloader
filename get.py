@@ -52,7 +52,6 @@ if max_bookmark_id == '0':
 json_result = api.user_bookmarks_illust(
     user_id, max_bookmark_id=max_bookmark_id)
 
-print(db_path)
 next_qs = ""
 while count > 0:
     api.auth(refresh_token=refresh_token)
