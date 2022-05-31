@@ -29,8 +29,8 @@ user_id と refresh_token を記述する．token は auth.py で取得できる
 
 ## 下準備
 
-```
-pip install requests selenium pixivpy
+```shell
+pip install -r requirements.txt
 ```
 
 ChromeDrive を入れとく．
@@ -38,7 +38,7 @@ ChromeDrive を入れとく．
 
 ## トークンの取得
 
-```
+```shell
 python auth.py login
 ```
 
