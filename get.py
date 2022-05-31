@@ -76,7 +76,7 @@ while count > 0:
             metadata.meta_to_db(metadata=illust, db_path=db_path)
 
             creator_id = str(illust.user.account)+'_'
-            if illust.type == 'illust':
+            if illust.type == 'illust' or illust.type == 'ugoira' or illust.type == 'manga':
 
                 # イラストが1枚のときのDL
                 if illust['page_count'] == 1:
