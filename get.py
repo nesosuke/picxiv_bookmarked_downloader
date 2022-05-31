@@ -3,7 +3,7 @@ import json
 import os
 import sys
 import time
-
+import ugoira
 import pixivpy3
 import metadata
 with open('config.json', 'r') as f:
@@ -76,8 +76,7 @@ while count > 0:
             metadata.meta_to_db(metadata=illust, db_path=db_path)
 
             creator_id = str(illust.user.account)+'_'
-            if illust.type == 'illust' or illust.type == 'ugoira' or illust.type == 'manga':
-
+            if illust.type == 'illust' or illust.type == 'manga':
                 # イラストが1枚のときのDL
                 if illust['page_count'] == 1:
                     original_url = illust.meta_single_page.original_image_url
@@ -93,6 +92,10 @@ while count > 0:
                         api.download(original_url, path=save_dir,
                                      prefix=creator_id)
                         time.sleep(1)
+
+            elif illust.type == 'ugoira':
+                ugoira.fetch_ugoira_frames(
+                    api=api, id=illust.id, metadata=illust, save_dir=save_dir)
 
     next_url = json_result.next_url
     next_qs = api.parse_qs(next_url)
