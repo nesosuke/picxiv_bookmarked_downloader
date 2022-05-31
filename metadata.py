@@ -8,8 +8,10 @@ def normalize_tags(metadata):
     if type(metadata["tags"]) is list:
         for i in range(len(metadata["tags"])):
             tag = metadata["tags"][i]['name']
-            tags += tag + ","
-            tags = tags[:-1]
+            if tags == "":
+                tags = tag
+            else:
+                tags = tags + "," + tag
     else:  # type(metadata["tags"]) is dict
         tag = metadata["tags"]['name']
         tags = tag
