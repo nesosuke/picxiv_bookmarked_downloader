@@ -130,5 +130,5 @@ dmypy.json
 
 pixiv_pics/
 chromedriver*
-config.json
+*.json
 pixiv.sqlite
