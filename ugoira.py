@@ -1,12 +1,15 @@
 import glob
 import os
 import shutil
-
+import json
 from PIL import Image
 
 
 def fetch_ugoira_frames(api, id, metadata, save_dir):
     meta_ugoira = api.ugoira_metadata(id)
+    if meta_ugoira.error:
+        return None
+
     ugoira_dir = save_dir+'/'+str(id)+'_ugoira'
     if not os.path.exists(ugoira_dir):
         os.mkdir(ugoira_dir)
