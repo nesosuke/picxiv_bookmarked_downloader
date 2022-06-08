@@ -59,14 +59,28 @@ while count > 0:
     api.auth(refresh_token=refresh_token)
     if getAll is False:
         print('left_page:', count)
-    if next_qs != "":
+    if next_qs != "":  # 2周目以降
         json_result = api.user_bookmarks_illust(**next_qs)
+        with open('json_result.json', 'w') as f:
+            json.dump(json_result, f)
+            
+        config['max_bookmark_id'] = next_qs['max_bookmark_id']
+        if getAll:
+            with open('config.json', 'w') as f:
+                json.dump(config, f)
         print(next_qs['max_bookmark_id'])
     else:
         print(max_bookmark_id)
 
     favoritesillust_ids = []
-    for illust in json_result['illusts']:
+    illusts = []
+    try:
+        for illust in json_result.illusts:
+            illusts.append(illust)
+    except:
+        pass
+
+    for illust in illusts:
         favoritesillust_ids.append(illust['id'])
 
     # Download pics
