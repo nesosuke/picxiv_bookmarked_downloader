@@ -19,7 +19,7 @@ def normalize_tags(metadata):
 
 
 def normalize_metadata(metadata):
-    metadata = {
+    data = {
         "id": metadata["id"],
         "title": metadata["title"],
         "tags": normalize_tags(metadata),
@@ -35,8 +35,10 @@ def normalize_metadata(metadata):
         "sanity_level": metadata["sanity_level"],
         "series_id": metadata["series"]["id"] if metadata["series"] else None,
         "series_title": metadata["series"]["title"] if metadata["series"] else None,
+        "visible": metadata["visible"],
+        "is_followed": metadata["user"]["is_followed"] if not metadata["user"]["name"] == "" else None
     }
-    return metadata
+    return data
 
 # with open("metadata.json", "w", encoding='utf-8') as f:
 #     f.write(str(metadata))
@@ -67,7 +69,9 @@ def meta_to_db(metadata: dict, db_path):
                 height INTEGER,
                 sanity_level INTEGER,
                 series_id INTEGER,
-                series_title TEXT
+                series_title TEXT,
+                visible boolean,
+                is_followed boolean
             )
         ''')
         conn.commit()
